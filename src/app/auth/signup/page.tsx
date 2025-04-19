@@ -103,8 +103,14 @@ export default function SignUp() {
 
             // For now just redirect
             router.push("/auth/signin?registered=true");
-        } catch (error: any) {
-            setError(error.message || "An error occurred during registration");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(
+                    error.message || "An error occurred during registration"
+                );
+            } else {
+                setError("An unexpected error occurred");
+            }
             setIsLoading(false);
         }
     };

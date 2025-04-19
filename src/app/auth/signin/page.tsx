@@ -1,14 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, Suspense } from "react";
+// import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
-export default function SignIn() {
+// Loading component to display while suspense is active
+function SignInLoading() {
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+            <div className="text-xl">Loading...</div>
+        </div>
+    );
+}
+
+// Inner component that uses useSearchParams
+function SignInForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -195,7 +205,7 @@ export default function SignIn() {
                             </div>
                             <div className="relative flex justify-center text-sm">
                                 <span className="px-2 bg-white text-gray-500">
-                                    Don't have an account?
+                                    Don&apos;t have an account?
                                 </span>
                             </div>
                         </div>
@@ -211,5 +221,14 @@ export default function SignIn() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Main component wrapped with Suspense
+export default function SignIn() {
+    return (
+        <Suspense fallback={<SignInLoading />}>
+            <SignInForm />
+        </Suspense>
     );
 }
